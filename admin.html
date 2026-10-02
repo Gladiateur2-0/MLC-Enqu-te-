@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Espace administrateur — Enquête MLC</title>
+  <link rel="icon" href="assets/logo-mlc.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body class="viz-root">
+
+<!-- ===================== CONNEXION ===================== -->
+<section class="login" id="loginView">
+  <div class="login-visual">
+    <div class="cap">
+      <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span>Espace administrateur</span>
+      <h2>Pilotez la satisfaction de vos clients</h2>
+      <p style="margin:0;opacity:.85">Résultats en temps réel, rapport graphique et gestion du questionnaire.</p>
+    </div>
+  </div>
+  <div class="login-form">
+    <form id="loginForm" autocomplete="on">
+      <img class="logo" src="assets/logo-mlc.png" alt="Mercure Logistics Congo">
+      <h1>Connexion</h1>
+      <p style="color:var(--muted);margin:0 0 6px">Accès réservé aux équipes MLC.</p>
+      <div class="alert hidden" id="loginErr" role="alert"></div>
+      <label class="field"><span>Identifiant</span><input type="text" id="lgUser" autocomplete="username" required></label>
+      <label class="field"><span>Mot de passe</span><input type="password" id="lgPass" autocomplete="current-password" required></label>
+      <button class="btn btn-primary" style="width:100%" type="submit" id="lgBtn">Se connecter</button>
+      <p class="note" id="modeNote"></p>
+      <p class="note"><a href="index.html">← Retour au questionnaire</a></p>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== APPLICATION ===================== -->
+<div id="appView" class="hidden">
+  <header class="app-head">
+    <div class="wrap">
+      <img src="assets/logo-mlc.png" alt="MLC">
+      <span class="title">Enquête de satisfaction</span>
+      <span class="pill" id="modePill"></span>
+      <nav class="tabs" role="tablist">
+        <button role="tab" data-tab="report" aria-selected="true">Rapport</button>
+        <button role="tab" data-tab="responses" aria-selected="false">Réponses</button>
+        <button role="tab" data-tab="editor" aria-selected="false">Questions</button>
+        <button role="tab" data-tab="settings" aria-selected="false">Paramètres</button>
+        <button id="logout" class="icon-btn" style="margin-left:6px">Déconnexion</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app wrap">
+    <!-- ---------- RAPPORT ---------- -->
+    <section id="tab-report" role="tabpanel">
+      <div class="report-head">
+        <img src="assets/logo-mlc.png" alt="MLC">
+        <div style="text-align:right"><strong>Rapport — Enquête de satisfaction clients</strong><br><span id="printMeta"></span></div>
+      </div>
+      <div class="toolbar">
+        <label>Période
+          <select id="fPeriod">
+            <option value="all">Toute la période</option>
+            <option value="30">30 derniers jours</option>
+            <option value="90">3 derniers mois</option>
+            <option value="180">6 derniers mois</option>
+            <option value="365">12 derniers mois</option>
+            <option value="custom">Personnalisée…</option>
+          </select>
+        </label>
+        <label class="hidden" id="fFromL">Du <input type="date" id="fFrom"></label>
+        <label class="hidden" id="fToL">Au <input type="date" id="fTo"></label>
+        <label>Secteur <select id="fSector"><option value="">Tous</option></select></label>
+        <label>Prestation <select id="fService"><option value="">Toutes</option></select></label>
+        <span class="spacer"></span>
+        <button class="btn btn-line btn-sm" id="refresh">↻ Actualiser</button>
+        <button class="btn btn-dark btn-sm" id="printBtn">⎙ Rapport PDF</button>
+      </div>
+      <div id="report"></div>
+    </section>
+
+    <!-- ---------- RÉPONSES ---------- -->
+    <section id="tab-responses" role="tabpanel" class="hidden">
+      <div class="toolbar">
+        <label>Rechercher <input type="text" id="search" placeholder="Entreprise, commentaire…"></label>
+        <span class="spacer"></span>
+        <button class="btn btn-line btn-sm" id="expCsv">⬇ Export Excel (CSV)</button>
+        <button class="btn btn-line btn-sm" id="expJson">⬇ Export JSON</button>
+      </div>
+      <div class="card table-scroll"><table class="data" id="respTable"></table></div>
+    </section>
+
+    <!-- ---------- ÉDITEUR ---------- -->
+    <section id="tab-editor" role="tabpanel" class="hidden">
+      <div class="toolbar">
+        <div><strong style="font-size:18px">Modifier le questionnaire</strong><br><span style="color:var(--muted);font-size:14px">Les changements sont visibles par les clients dès que vous cliquez sur « Publier ».</span></div>
+        <span class="spacer"></span>
+        <button class="btn btn-line btn-sm" id="edAddSec">＋ Nouvelle étape</button>
+        <a class="btn btn-line btn-sm" href="index.html#enquete" target="_blank" rel="noopener">Aperçu ↗</a>
+      </div>
+      <div id="editor"></div>
+      <div class="sticky-save">
+        <span class="msg" id="edMsg">Aucune modification.</span>
+        <button class="btn btn-line btn-sm" id="edExport">Exporter (JSON)</button>
+        <label class="btn btn-line btn-sm" style="cursor:pointer">Importer<input type="file" id="edImport" accept="application/json" hidden></label>
+        <button class="btn btn-line btn-sm" id="edReset">Rétablir les questions d'origine</button>
+        <button class="btn btn-primary btn-sm" id="edSave">Publier</button>
+      </div>
+    </section>
+
+    <!-- ---------- PARAMÈTRES ---------- -->
+    <section id="tab-settings" role="tabpanel" class="hidden">
+      <div class="settings">
+        <div class="card panel">
+          <h3>Mode de collecte</h3>
+          <div id="setMode"></div>
+        </div>
+        <div class="card panel">
+          <h3>Changer le mot de passe administrateur</h3>
+          <p id="pwdHelp"></p>
+          <div class="row2">
+            <input type="password" id="newPwd" placeholder="Nouveau mot de passe (10 caractères min.)">
+            <button class="btn btn-dark btn-sm" id="hashBtn">Générer l'empreinte</button>
+          </div>
+          <p style="margin-top:12px" id="hashOut"></p>
+        </div>
+        <div class="card panel">
+          <h3>Données de démonstration</h3>
+          <p>Génère des réponses fictives cohérentes avec le questionnaire actuel pour visualiser le rapport. À supprimer avant le lancement réel.</p>
+          <div class="ed-actions">
+            <button class="btn btn-line btn-sm" id="genDemo">Générer 120 réponses fictives</button>
+            <label class="btn btn-line btn-sm" style="cursor:pointer">Importer des réponses (JSON)<input type="file" id="impResp" accept="application/json" hidden></label>
+            <button class="btn btn-line btn-sm" id="clearAll" style="color:var(--red)">Supprimer toutes les réponses</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- fenêtre de détail / édition -->
+<dialog id="dlg"><div class="d-head"><h3 id="dlgTitle"></h3><button class="icon-btn" id="dlgClose" aria-label="Fermer">✕</button></div><div class="d-body" id="dlgBody"></div><div class="d-foot" id="dlgFoot"></div></dialog>
+
+<script src="js/config.js"></script>
+<script src="js/questions.js"></script>
+<script src="js/store.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

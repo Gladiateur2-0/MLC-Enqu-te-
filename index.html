@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enquête de satisfaction — Mercure Logistics Congo</title>
+  <meta name="description" content="Donnez votre avis sur les prestations de Mercure Logistics Congo : transport routier, entreposage, douane, logistique portuaire, fluvial et multimodal.">
+  <meta property="og:title" content="Enquête de satisfaction — Mercure Logistics Congo">
+  <meta property="og:description" content="5 minutes pour nous aider à mieux vous servir.">
+  <meta property="og:image" content="assets/flotte.jpg">
+  <link rel="icon" href="assets/logo-mlc.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="hero" id="hero">
+  <div class="fade" id="fade"></div>
+  <div class="topbar">
+    <a class="brand" href="https://www.mercure-logistics.com" target="_blank" rel="noopener" aria-label="Site de Mercure Logistics Congo">
+      <img src="assets/logo-mlc.png" alt="MLC — Mercure Logistics Congo">
+    </a>
+    <a class="ghost" href="admin.html">Espace admin</a>
+  </div>
+
+  <div class="hero-copy">
+    <span class="eyebrow"><span class="slashes"><i></i><i></i><i></i></span><span id="surveyTitle">Enquête de satisfaction clients</span></span>
+    <h1>Votre avis fait avancer <em>chaque livraison</em></h1>
+    <p class="lead">Du Port de Pointe-Noire jusqu'à Brazzaville, Bangui ou Kinshasa : dites-nous comment nous vous servons, et où nous devons faire mieux. 5 minutes, et vos réponses restent confidentielles.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#enquete">Commencer l'enquête →</a>
+      <button class="btn btn-glass" id="pauseBtn" type="button" aria-pressed="false">❚❚ Pause animation</button>
+    </div>
+  </div>
+  <div class="scene-tag">Animation 3D · camion SHACMAN de la flotte MLC</div>
+</header>
+
+<section class="about">
+  <div class="wrap about-grid">
+    <div>
+      <span class="kicker">Mercure Logistics Congo</span>
+      <h2>Toute la chaîne logistique, de l'arrivée au port à la livraison</h2>
+      <p>Transport routier, entreposage, formalités douanières, logistique portuaire, transport multimodal et fluvial, projet cargo : MLC maîtrise l'ensemble de la chaîne d'approvisionnement en République du Congo, en RCA, en RDC et au Cabinda.</p>
+      <p>Chaque client dispose d'un interlocuteur unique. Cette enquête nous aide à vérifier, prestation par prestation, que nous tenons nos engagements.</p>
+      <div class="stats">
+        <div class="stat"><b>350</b><span>camions</span></div>
+        <div class="stat"><b>42</b><span>barges</span></div>
+        <div class="stat"><b>95</b><span>équipements de manutention</span></div>
+        <div class="stat"><b>20 000 m²</b><span>d'entrepôts</span></div>
+      </div>
+    </div>
+    <div class="photo"><img src="assets/flotte.jpg" alt="Camions SHACMAN et SINOTRUK de la flotte Mercure Logistics Congo au parc à conteneurs" loading="lazy"></div>
+  </div>
+</section>
+
+<section class="survey" id="enquete">
+  <div class="wrap survey-shell">
+    <ol class="steps" id="steps" aria-label="Étapes de l'enquête"></ol>
+    <div>
+      <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+      <div id="demo" class="demo-banner hidden">Mode démonstration : les réponses sont enregistrées uniquement dans ce navigateur. Configurez <code>BACKEND_URL</code> dans <code>js/config.js</code> pour collecter les réponses de vos clients (voir README).</div>
+      <form class="card form-card" id="form" novalidate>
+        <div id="loading">Chargement du questionnaire…</div>
+      </form>
+      <div class="card thanks hidden" id="thanks">
+        <div class="tick">✓</div>
+        <h2>Merci !</h2>
+        <p>Votre avis a bien été enregistré. L'équipe Mercure Logistics Congo l'étudiera avec attention.</p>
+        <p style="color:var(--muted);font-size:14px" id="ref"></p>
+        <a class="btn btn-dark" href="https://www.mercure-logistics.com" target="_blank" rel="noopener">Visiter mercure-logistics.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap cols">
+    <div>
+      <div class="stripe"><i></i><i></i><i></i></div>
+      <strong style="color:var(--ink)">Mercure Logistics Congo</strong><br>
+      366, Avenue Jacques Opangault, Pointe-Noire · Boulevard Denis Sassou Nguesso, Brazzaville
+    </div>
+    <div>
+      <a href="tel:+242064676464">+242 06 467 64 64</a> · <a href="mailto:info@mercure-logistics.com">info@mercure-logistics.com</a><br>
+      <a href="https://www.mercure-logistics.com" target="_blank" rel="noopener">www.mercure-logistics.com</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/questions.js"></script>
+<script src="js/store.js"></script>
+<script src="js/survey.js"></script>
+<script src="js/animation3d.min.js" defer></script>
+<script>
+  /* Animation 3D : fonctionne sur GitHub Pages ET en ouvrant index.html directement (aucun module, aucun CDN). */
+  window.addEventListener("load", function () {
+    var hero = document.getElementById("hero"), btn = document.getElementById("pauseBtn");
+    try {
+      var test = document.createElement("canvas");
+      if (!(test.getContext("webgl2") || test.getContext("webgl"))) throw new Error("WebGL indisponible sur cet appareil");
+      if (typeof window.initTruckScene !== "function") throw new Error("js/animation3d.min.js introuvable");
+      var scene = window.initTruckScene(hero, { logoUrl: "assets/logo-mlc.png", fadeEl: document.getElementById("fade") });
+      hero.insertBefore(hero.querySelector("canvas"), hero.firstChild);
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) { scene.toggle(); btn.textContent = "▶ Lancer l'animation"; btn.setAttribute("aria-pressed", "true"); }
+      btn.addEventListener("click", function () {
+        var on = scene.toggle();
+        btn.textContent = on ? "❚❚ Pause animation" : "▶ Reprendre l'animation";
+        btn.setAttribute("aria-pressed", String(!on));
+      });
+    } catch (e) {
+      console.warn("Animation 3D désactivée :", e);
+      btn.remove();               // la photo de la flotte reste affichée en fond
+    }
+  });
+</script>
+</body>
+</html>
